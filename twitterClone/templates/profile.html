@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% load bootstrap4 %}
+
+{% bootstrap_css %}
+
+{% block main %}
+
+<h3>@{{ user.username }}</h3>
+    <hr>
+
+    <b><a href="/{{ user.username }}/follows/">Follows:</a></b> {{ user.profile.related_to.count }}
+    <b><a href="/{{ user.username }}/followers/">Followers:</a></b> {{ user.profile.followers.count }}
+    <b>
+        <div class="dropdown">
+            <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Notifications
+            </button>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                {% for notification in user.profile.recipient_notification.all %}
+                    <a class="dropdown-item" href="">{{ notification.message }} started following you</a>
+                {% endfor %}
+            </div>
+        </div>
+    </b>
+    
+    <br>
+    <br>
+
+    {% ifnotequal request.user user %}
+      <hr> 
+
+      {% if request.user.profile in user.profile.followers.all %}
+        <a href="/{{ user.username }}/stopfollow/" class="btn btn-danger">Stop follow</a>
+      {% else %}
+        <a href="/{{ user.username }}/follow/" class="btn btn-success">Follow</a>
+      {% endif %}
+    {% endifnotequal %}
+
+<div style="display:flex; flex-direction: row; justify-content:space-around">
+    <div>
+        {% if user.profile.tweets.all %}
+            {% for tweet in user.profile.tweets.all %}
+            <div class="card" style="margin-bottom: 20px;">
+                <div class="card-body">
+                    <h5 class="card-title">@{{ tweet.user }}</h5>
+                    <p class="card-text"><b>{{tweet.created_at }}</b> - {{ tweet.body }}</p>
+                </div>  
+            </div>
+            {% endfor %}
+        {% else %}
+            <p>No tweets yet!</p>
+        {% endif %}
+
+    </div>
+    <div>
+        <h1>Add Tweet</h1>
+        <form class='form' method='post' action=''>
+            {% csrf_token %}
+            {{ form.as_p }}
+        <input type='submit' value='tweet'>
+            
+        </form>
+    </div>
+</div>
+
+{% endblock %}
