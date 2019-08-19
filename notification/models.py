@@ -1,5 +1,5 @@
 from django.db import models
-from userProfile.models import Profile
+from twitteruser.models import Profile
 
 # Create your models here.
 

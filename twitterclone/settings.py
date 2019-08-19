@@ -38,8 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'twitterClone',
-    'userProfile',
+    'twitterclone',
+    'twitteruser',
     'tweet',
     'notification'
 ]
@@ -54,7 +54,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'twitterClone.urls'
+ROOT_URLCONF = 'twitterclone.urls'
 
 TEMPLATES = [
     {
@@ -72,7 +72,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'twitterClone.wsgi.application'
+WSGI_APPLICATION = 'twitterclone.wsgi.application'
 
 
 # Database

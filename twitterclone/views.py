@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import SignUpForm, SignInForm
 from django.contrib.auth import login, authenticate, logout
 from django.contrib.auth.models import User
-from userProfile.models import Profile
+from twitteruser.models import Profile
 from tweet.forms import TweetForm
 from tweet.models import Tweet
 from notification.models import Notification
