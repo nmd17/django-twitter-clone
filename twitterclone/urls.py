@@ -22,8 +22,9 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', homepage, name='homepage'),
     path('feed/', feed, name='feed'),
-    path('signout/', signout, name='signout'),
-    path('<str:username>/', profile, name='profile'),
-    path('<str:username>/follow/', follow, name='follow'),
-    path('<str:username>/stopfollow/', stopfollow, name='stopfollow'),
+    path('signout/', signout.as_view(), name='signout'),
+    path('<str:username>/', profile.as_view(), name='profile'),
+    path('<str:username>/follow/', follow.as_view(), name='follow'),
+    path('<str:username>/stopfollow/', stopfollow.as_view(), name='stopfollow'),
+    
 ]

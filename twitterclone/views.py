@@ -6,6 +6,7 @@ from twitteruser.models import Profile
 from tweet.forms import TweetForm
 from tweet.models import Tweet
 from notification.models import Notification
+from django.views import View
 
 def homepage(request):
     if request.user.is_authenticated:
@@ -34,14 +35,19 @@ def homepage(request):
   
     return render(request, 'homepage.html', {'signupform': signupform, 'signinform': signinform})
 
-def profile(request, username):
-    if request.user.is_authenticated:
-        user = User.objects.get(username=username)
-    
-        if request.method == 'POST':
-            form = TweetForm(data=request.POST)
 
-            if form.is_valid():
+
+class profile(View):
+    form_class = TweetForm
+
+    def get(self, request, *args, **kwargs):
+        form = self.form_class
+        return render(request, 'profile.html', {'form': form})
+    
+    def post(self, request, *args, **kwargs):
+        form = self.form_class(data = request.POST)
+
+        if form.is_valid():
                 
                 data = form.cleaned_data
                 user = request.user
@@ -51,32 +57,31 @@ def profile(request, username):
                 redirecturl = request.POST.get('redirect', '/')
 
                 return redirect(redirecturl)
-        else:
-            form = TweetForm()
 
-        return render(request, 'profile.html', {'form': form, 'user': user})
-    else:
+class signout(View):
+    def get(self, request):
+        logout(request)
         return redirect('/')
 
-def signout(request):
-    logout(request)
-    return redirect('/')
-
-def follow(request, username):
-    user = User.objects.get(username=username)
-    message = request.user.profile
-    notification = Notification.objects.create(sender=request.user.profile,
+class follow(View):
+    def get(self, request, username):
+        user = User.objects.get(username=username)
+        message = request.user.profile
+        notification = Notification.objects.create(sender=request.user.profile,
                                                recipient=user.profile,
                                                message=message)
 
-    user.profile.followers.add(request.user.profile)
-    user.profile.recipient_notification.add(notification)
+        user.profile.followers.add(request.user.profile)
+        user.profile.recipient_notification.add(notification)
 
-    return redirect('/' + user.username + '/')
+        return redirect('/' + user.username + '/')
 
-def stopfollow(request, username):
-    user = User.objects.get(username=username)
-    user.profile.followers.remove(request.user.profile)
 
-    return redirect('/' + user.username + '/')
+class stopfollow(View):
+    def get(self, request, username):
+        user = User.objects.get(username=username)
+        user.profile.followers.remove(request.user.profile)
+
+        return redirect('/' + user.username + '/')
+
 
